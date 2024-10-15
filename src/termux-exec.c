@@ -35,6 +35,10 @@
 #define TERMUX_BASE_DIR "/data/data/com.termux/files"
 #endif
 
+#ifndef TERMUX_CACHE_DIR
+#define TERMUX_CACHE_DIR "/data/data/com.termux/cache"
+#endif
+
 #define TERMUX_BIN_PATH TERMUX_BASE_DIR "/usr/bin/"
 #define TERMUX_BIN_PATH_LEN sizeof(TERMUX_BIN_PATH) - 1
 
@@ -351,6 +355,7 @@ __attribute__((visibility("default"))) int execve(const char *executable_path, c
   char const *executable_path_resolved = realpath(executable_path, executable_path_resolved_buffer);
   char const *path_to_use = executable_path_resolved ? executable_path_resolved : executable_path;
   bool wrap_in_linker = (strstr(path_to_use, TERMUX_BASE_DIR) == path_to_use)
+                        || (strstr(path_to_use, TERMUX_CACHE_DIR) == path_to_use)
                         // /system/bin/sh is fine, it only uses libc++, libc, and libdl.
                         || (strcmp(path_to_use, "/system/bin/sh") == 0);
 

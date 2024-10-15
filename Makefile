@@ -1,5 +1,6 @@
 CC ?= clang
 TERMUX_BASE_DIR ?= /data/data/com.termux/files
+TERMUX_CACHE_DIR ?= /data/data/com.termux/cache
 CFLAGS += -Wall -Wextra -Werror -Wshadow -fvisibility=hidden -std=c17
 C_SOURCE := src/termux-exec.c src/exec-variants.c src/termux-readlink.c
 CLANG_FORMAT := clang-format --sort-includes --style="{ColumnLimit: 120}" $(C_SOURCE) tests/fexecve.c tests/system-uname.c tests/print-argv0.c tests/popen.c
@@ -16,7 +17,7 @@ ifeq ($(HOST_BUILD),1)
 endif
 
 libtermux-exec.so: $(C_SOURCE)
-	$(CC) $(CFLAGS) $(LDFLAGS) $(C_SOURCE) -DTERMUX_PREFIX=\"$(TERMUX_PREFIX)\" -DTERMUX_BASE_DIR=\"$(TERMUX_BASE_DIR)\" -shared -fPIC -o libtermux-exec.so
+	$(CC) $(CFLAGS) $(LDFLAGS) $(C_SOURCE) -DTERMUX_PREFIX=\"$(TERMUX_PREFIX)\" -DTERMUX_BASE_DIR=\"$(TERMUX_BASE_DIR)\" -DTERMUX_CACHE_DIR=\"$(TERMUX_CACHE_DIR)\" -shared -fPIC -o libtermux-exec.so
 
 tests/fexecve: tests/fexecve.c
 	$(CC) $(CFLAGS) -DTERMUX_BASE_DIR=\"$(TERMUX_BASE_DIR)\" $< -o $@
